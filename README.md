@@ -1,70 +1,114 @@
-# Getting Started with Create React App
+# SMTP Simulator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[![React](https://img.shields.io/badge/React-19.1.0-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8.1.0-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.17-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
-## Available Scripts
+An interactive educational simulator of the **SMTP (Simple Mail Transfer Protocol)**. It allows users to visualize and understand how emails are sent step by step, from client configuration through relay servers to the final recipient, using drag-and-drop network topology building and real-time protocol simulation.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Main Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Static Simulation** — Step-by-step SMTP protocol visualization with command/response pairs for learning the basics
+- **Dynamic Simulation** — Drag-and-drop canvas to build custom network topologies with clients and servers
+- **Example Topology** — Pre-built SMTP topology (clients, relay servers, recipients) to run simulations instantly
+- **Email Configuration** — Modal-based email composer to set sender, recipient, subject, and message before simulation
+- **Real-time Communication Log** — Dark-themed live log panel showing every SMTP command and response sequentially
+- **Smooth Page Transitions** — Animated loading screens with envelope icon when navigating between views
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## Pages & Views
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+| View | Description |
+|---|---|
+| `/` — **Static Simulator** | Predefined SMTP simulation with 7 protocol steps, email configuration, and real-time log. Ideal for learning the protocol basics. |
+| `/simulator` — **Dynamic Simulator** | Drag-and-drop canvas to build custom SMTP topologies. Supports adding/removing clients and servers, configuring domains and ports, connecting elements, and running simulations on your own network design. |
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Execution and Development Guide
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/CamiloAT/SMTPsimulator-feature-dinamic-simulator.git
+   cd SMTPsimulator-feature-dinamic-simulator
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-### `npm run eject`
+3. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+4. **Build for production** (optional)
+   ```bash
+   npm run build
+   ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+> **Note:** Node.js 18+ is required. The project uses Vite as the build tool.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Project Structure
 
-## Learn More
+```text
+SMTPsimulator-feature-dinamic-simulator/
+├── public/                              # Static assets (favicon, logo)
+├── src/
+│   ├── components/                      # Shared React components
+│   │   ├── CommunicationLog.jsx         #   Real-time log panel with auto-scroll
+│   │   ├── EmailConfiguration.jsx       #   Email config form (from/to/subject/message)
+│   │   ├── LoadingScreen.jsx            #   Animated page transition overlay
+│   │   ├── ProtocolInfo.jsx             #   SMTP technical reference card
+│   │   ├── ProtocolSteps.jsx            #   Step-by-step protocol progress
+│   │   ├── SimulationControls.jsx       #   Start/stop/reset simulation controls
+│   │   └── index.js                     #   Barrel exports
+│   ├── hooks/
+│   │   └── useSmtpSimulation.js         # Custom hook for static simulation logic
+│   ├── pages/
+│   │   ├── Home/                        # Static simulator view (/)
+│   │   │   └── index.jsx
+│   │   └── Simulator/                   # Dynamic drag-and-drop simulator (/simulator)
+│   │       └── index.jsx
+│   ├── SMTPSimulator.jsx                # Static simulator page component
+│   ├── App.jsx                          # Router configuration
+│   ├── index.jsx                        # React entry point
+│   └── index.css                        # Tailwind directives + custom animations
+├── index.html                           # Vite root HTML
+├── vite.config.js                       # Vite configuration
+├── tailwind.config.js                   # Tailwind CSS configuration
+└── package.json                         # Dependencies and scripts
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Tech Stack
 
-### Code Splitting
+| Layer | Technology |
+|---|---|
+| Frontend Framework | React 19.1.0 |
+| Build Tool | Vite 8.1.0 |
+| Styling | Tailwind CSS 3.4.17 |
+| Routing | React Router DOM 7.6.1 |
+| Icons | Lucide React 0.511.0 |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+## Authors
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+| Name | GitHub |
+|---|---|
+| *Diego Fernando Aguirre Tenjo* | [@elcokiin](https://github.com/elcokiin) |
+| *Camilo Andres Arias Tenjo* | [@CamiloAT](https://github.com/CamiloAT) |
+| *Katlyn Jennelis Galvis Rodriguez* | [@Katlyng](https://github.com/Katlyng) |
+| *Gabriel Santiago Cely Forero* | [@Gabigool](https://github.com/Gabigool) |
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+*Data Transmission Protocols*
