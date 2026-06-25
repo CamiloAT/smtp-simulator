@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+    .animate-slide-down {
+        animation: slideDown 0.3s ease-out;
+    }
+    @keyframes slideDown {
+        from { opacity: 0; transform: translate(-50%, -20px); }
+        to { opacity: 1; transform: translate(-50%, 0); }
+    }
+    .animate-fade-in {
+        animation: fadeIn 0.2s ease-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

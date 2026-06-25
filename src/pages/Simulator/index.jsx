@@ -1,23 +1,54 @@
-import React, { useState, useRef, useCallback } from 'react';
-import { Server, Monitor, Cable, Settings, Plus, X, Play, RefreshCcw, Pause, Square } from 'lucide-react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { Server, Monitor, Cable, Settings, Plus, X, Play, RefreshCcw, Pause, Square, MousePointer, AlertTriangle, GripVertical, Zap, Wrench, Terminal } from 'lucide-react';
 import { CommunicationLog } from '../../components';
+
+const AlertNotification = ({ message, type, onClose }) => {
+    useEffect(() => {
+        const timer = setTimeout(onClose, 4000);
+        return () => clearTimeout(timer);
+    }, [onClose]);
+
+    const styles = {
+        error: 'bg-red-50 border-red-400 text-red-800',
+        warning: 'bg-yellow-50 border-yellow-400 text-yellow-800',
+        success: 'bg-green-50 border-green-400 text-green-800',
+        info: 'bg-blue-50 border-blue-400 text-blue-800',
+    };
+
+    const icons = {
+        error: <AlertTriangle size={18} />,
+        warning: <AlertTriangle size={18} />,
+        success: <Zap size={18} />,
+        info: <Zap size={18} />,
+    };
+
+    return (
+        <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 px-5 py-3 rounded-lg border-l-4 shadow-lg ${styles[type] || styles.info} animate-slide-down`}>
+            {icons[type] || icons.info}
+            <span className="text-sm font-medium flex-1">{message}</span>
+            <button onClick={onClose} className="ml-2 opacity-60 hover:opacity-100">
+                <X size={16} />
+            </button>
+        </div>
+    );
+};
 
 const EmailConfigScreen = ({ emailData, setEmailData, onSend, onCancel, initialClients, finalClients, isRunning }) => {
     return (
-        <div className="fixed inset-0 bg-gray-100 z-50 flex items-center justify-center">
-            <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-2xl mx-4">
-                <div className="flex items-center mb-6">
-                    <Settings className="mr-3 text-blue-600" size={24} />
-                    <h2 className="text-xl font-bold text-gray-800">Configuración del Email</h2>
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in">
+            <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md mx-4">
+                <div className="flex items-center mb-4">
+                    <Settings className="mr-2 text-blue-600" size={20} />
+                    <h2 className="text-lg font-bold text-gray-800">Configuración del Email</h2>
                 </div>
                 
-                <div className="space-y-4">
+                <div className="space-y-3">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">De:</label>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">De:</label>
                         <select
                             value={emailData.from}
                             onChange={(e) => setEmailData(prev => ({...prev, from: e.target.value}))}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
                             {initialClients.map(client => (
                                 <option key={client} value={client}>{client}</option>
@@ -26,11 +57,11 @@ const EmailConfigScreen = ({ emailData, setEmailData, onSend, onCancel, initialC
                     </div>
                     
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Para:</label>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Para:</label>
                         <select
                             value={emailData.to}
                             onChange={(e) => setEmailData(prev => ({...prev, to: e.target.value}))}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
                             {finalClients.map(client => (
                                 <option key={client} value={client}>{client}</option>
@@ -39,35 +70,35 @@ const EmailConfigScreen = ({ emailData, setEmailData, onSend, onCancel, initialC
                     </div>
                     
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Asunto:</label>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Asunto:</label>
                         <input
                             type="text"
                             value={emailData.subject}
                             onChange={(e) => setEmailData(prev => ({...prev, subject: e.target.value}))}
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                     </div>
                     
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Mensaje:</label>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Mensaje:</label>
                         <textarea
                             value={emailData.message}
                             onChange={(e) => setEmailData(prev => ({...prev, message: e.target.value}))}
-                            rows="6"
-                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                            rows="3"
+                            className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                         />
                     </div>
                     
-                    <div className="flex justify-end space-x-4 pt-4">
+                    <div className="flex justify-end gap-2 pt-2">
                         <button
                             onClick={onCancel}
-                            className="px-6 py-3 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition duration-200"
+                            className="px-4 py-1.5 bg-gray-400 text-white text-sm rounded-lg hover:bg-gray-500 transition duration-200"
                         >
                             Cancelar
                         </button>
                         <button
                             onClick={onSend}
-                            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
+                            className="px-4 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition duration-200"
                             disabled={!emailData.from || !emailData.to || isRunning}
                         >
                             Enviar
@@ -88,6 +119,7 @@ const DynamicSimulator = () => {
     const [connectionStart, setConnectionStart] = useState(null);
     const [configModal, setConfigModal] = useState(null);
     const canvasRef = useRef(null);
+    const simulationAbortRef = useRef(false);
     const [simulationStatus, setSimulationStatus] = useState('disconnected');
     const [showEmailConfig, setShowEmailConfig] = useState(false);
     const [emailData, setEmailData] = useState({
@@ -97,6 +129,7 @@ const DynamicSimulator = () => {
         message: ''
     });
     const [logs, setLogs] = useState([]);
+    const [notification, setNotification] = useState(null);
 
     const tools = [
         { id: 'client', name: 'Cliente SMTP', icon: Monitor, color: 'bg-blue-500' },
@@ -317,31 +350,8 @@ const DynamicSimulator = () => {
     
 
     const startSimulation = () => {
-        setLogs([]);
-        addLog('Iniciando validación de la simulación...', 'info');
-        if (!validateAllFieldsComplete()) {
-            addLog('Validación de campos incompleta. Simulación abortada.', 'error');
-            return;
-        }
-
-        const { isValid, message } = validateSimulationStructure();
-        if (!isValid) {
-            alert(`Error de estructura de red: ${message}`);
-            addLog(`Error de estructura de red: ${message}`, 'error');
-            return;
-        }
-        addLog('Validación de estructura de red completada con éxito.', 'success');
-
-        assignDomainsToClients();
-
-        if (simulationStatus === 'disconnected' || simulationStatus === 'paused') {
-            prepareEmailOptions();
-            setShowEmailConfig(true);
-            addLog('Configuración de correo electrónico pendiente.', 'warning');
-        } else {
-            setSimulationStatus('paused');
-            addLog('Simulación pausada.', 'info');
-        }
+        prepareEmailOptions();
+        setShowEmailConfig(true);
     };
 
     const prepareEmailOptions = () => {
@@ -397,7 +407,24 @@ const DynamicSimulator = () => {
     };
 
     const handleSendEmail = () => {
-        addLog(`Correo configurado: De: ${emailData.from}, Para: ${emailData.to}, Asunto: ${emailData.subject}`, 'succes');
+        setLogs([]);
+        addLog('Iniciando validación de la simulación...', 'info');
+        if (!validateAllFieldsComplete()) {
+            addLog('Validación de campos incompleta. Simulación abortada.', 'error');
+            return;
+        }
+
+        const { isValid, message } = validateSimulationStructure();
+        if (!isValid) {
+            showNotification(`Error de estructura de red: ${message}`);
+            addLog(`Error de estructura de red: ${message}`, 'error');
+            return;
+        }
+        addLog('Validación de estructura de red completada con éxito.', 'success');
+
+        assignDomainsToClients();
+
+        addLog(`Correo configurado: De: ${emailData.from}, Para: ${emailData.to}, Asunto: ${emailData.subject}`, 'success');
         setShowEmailConfig(false);
         setSimulationStatus('running');
         addLog('✔️Simulación iniciada.', 'success');
@@ -416,6 +443,7 @@ const DynamicSimulator = () => {
     };
 
     const stopSimulation = () => {
+        simulationAbortRef.current = true;
         setSimulationStatus('disconnected');
         setIsConnecting(false);
         setConnectionStart(null);
@@ -423,6 +451,7 @@ const DynamicSimulator = () => {
     };
 
     const resetSimulation = () => {
+        simulationAbortRef.current = true;
         setElements([]);
         setConnections([]);
         setSimulationStatus('disconnected');
@@ -437,7 +466,44 @@ const DynamicSimulator = () => {
         addLog('🔄Simulación y elementos reiniciados.', 'warning');
     };
 
-    const runSmtpProtocolSimulation = () => {
+    const loadExample = () => {
+        resetSimulation();
+        const exampleElements = [
+            { id: 'c1', type: 'client', name: 'Cliente 1', x: 80, y: 150, config: { nickname: 'juan', domain: '@correo.com', port: 587 } },
+            { id: 'c2', type: 'client', name: 'Cliente 2', x: 80, y: 300, config: { nickname: 'maria', domain: '@correo.com', port: 587 } },
+            { id: 's1', type: 'server', name: 'Servidor A', x: 350, y: 220, config: { domain: 'correo.com', port: 25, maxConnections: 100 } },
+            { id: 's2', type: 'server', name: 'Servidor B', x: 620, y: 120, config: { domain: 'destino.com', port: 25, maxConnections: 100 } },
+            { id: 's3', type: 'server', name: 'Servidor C', x: 620, y: 330, config: { domain: 'empresa.com', port: 25, maxConnections: 100 } },
+            { id: 'c3', type: 'client', name: 'Cliente 3', x: 880, y: 100, config: { nickname: 'pedro', domain: '@destino.com', port: 587 } },
+            { id: 'c4', type: 'client', name: 'Cliente 4', x: 880, y: 350, config: { nickname: 'laura', domain: '@empresa.com', port: 587 } },
+        ];
+        const exampleConnections = [
+            { id: 'conn1', from: 'c1', to: 's1', fromPos: { x: 180, y: 175 }, toPos: { x: 350, y: 245 } },
+            { id: 'conn2', from: 'c2', to: 's1', fromPos: { x: 180, y: 325 }, toPos: { x: 350, y: 245 } },
+            { id: 'conn3', from: 's1', to: 's2', fromPos: { x: 450, y: 245 }, toPos: { x: 620, y: 145 } },
+            { id: 'conn4', from: 's1', to: 's3', fromPos: { x: 450, y: 245 }, toPos: { x: 620, y: 355 } },
+            { id: 'conn5', from: 's2', to: 'c3', fromPos: { x: 720, y: 145 }, toPos: { x: 880, y: 125 } },
+            { id: 'conn6', from: 's3', to: 'c4', fromPos: { x: 720, y: 355 }, toPos: { x: 880, y: 375 } },
+        ];
+        setElements(exampleElements);
+        setConnections(exampleConnections);
+        addLog('Ejemplo de topología SMTP cargado: 2 clientes → Servidor A → Servidores B y C → clientes finales.', 'success');
+    };
+
+    const delay = (ms) => new Promise((resolve, reject) => {
+        const id = setTimeout(() => {
+            if (simulationAbortRef.current) reject(new Error('aborted'));
+            else resolve();
+        }, ms);
+        if (simulationAbortRef.current) {
+            clearTimeout(id);
+            reject(new Error('aborted'));
+        }
+    });
+
+    const runSmtpProtocolSimulation = async () => {
+        simulationAbortRef.current = false;
+        try {
         addLog('🚀Iniciando protocolo SMTP...', 'success');
 
         const fromClientName = emailData.from.split('@')[0];
@@ -452,131 +518,149 @@ const DynamicSimulator = () => {
         }
 
         addLog(`[${fromClient.name}] Estableciendo conexión con [${firstServer.name}:${firstServer.config.port}]...`, 'client');
-        setTimeout(() => {
-            addLog(`[${firstServer.name}] 220 ${firstServer.config.domain} ESMTP Listo`, 'server');
-            addLog(`[${fromClient.name}] HELO ${fromClient.config.domain}`, 'client');
-        }, 1000);
+        await delay(1000);
 
-        setTimeout(() => {
-            addLog(`[${firstServer.name}] 250 ${firstServer.config.domain} ¡Hola!`, 'server');
-            addLog(`[${fromClient.name}] MAIL FROM:<${emailData.from}>`, 'client');
-        }, 2000);
+        addLog(`[${firstServer.name}] 220 ${firstServer.config.domain} ESMTP Listo`, 'server');
+        await delay(300);
+        addLog(`[${fromClient.name}] HELO ${fromClient.config.domain.replace('@', '')}`, 'client');
+        await delay(700);
 
-        setTimeout(() => {
-            addLog(`[${firstServer.name}] 250 OK`, 'server');
-            addLog(`[${fromClient.name}] RCPT TO:<${emailData.to}>`, 'client');
-        }, 3000);
+        addLog(`[${firstServer.name}] 250 ${firstServer.config.domain} ¡Hola!`, 'server');
+        await delay(300);
+        addLog(`[${fromClient.name}] MAIL FROM:<${emailData.from}>`, 'client');
+        await delay(700);
+
+        addLog(`[${firstServer.name}] 250 OK`, 'server');
+        await delay(300);
+        addLog(`[${fromClient.name}] RCPT TO:<${emailData.to}>`, 'client');
+        await delay(700);
 
         const toDomain = emailData.to.split('@')[1];
-        const isLocalRecipient = (server, recipientDomain) => server.config.domain === recipientDomain;
-
-        let needsRelay = true;
-        let relayServer = null;
-
         const intermediateServers = elements.filter(el => el.type === 'server' && el.id !== firstServer.id);
 
+        let needsRelay = true;
         for (const intServer of intermediateServers) {
             const outgoingConns = connections.filter(conn => conn.from === intServer.id);
-            const clientsConnectedToThisServer = outgoingConns.map(conn => elements.find(el => el.id === conn.to && el.type === 'client'));
-            if (clientsConnectedToThisServer.some(client => client && client.config.domain === toDomain)) {
+            const clientsConnected = outgoingConns.map(conn => elements.find(el => el.id === conn.to && el.type === 'client'));
+            if (clientsConnected.some(client => client && client.config.domain === `@${toDomain}`)) {
                 needsRelay = false;
-                relayServer = intServer;
                 break;
             }
         }
 
-        setTimeout(() => {
-            if (!needsRelay) {
-                addLog(`[${firstServer.name}] 250 OK`, 'server');
-                addLog(`[${fromClient.name}] DATA`, 'client');
-                setTimeout(() => {
-                    addLog(`[${firstServer.name}] 354 Ingrese el correo, termine con <CRLF>.<CRLF>`, 'server');
-                    addLog(`[${fromClient.name}] Subject: ${emailData.subject}`, 'client');
-                    addLog(`[${fromClient.name}] ${emailData.message}`, 'client');
-                    addLog(`[${fromClient.name}] .`, 'client');
-                }, 4500);
+        await delay(700);
 
-                setTimeout(() => {
-                    addLog(`[${firstServer.name}] 250 OK: mensaje en cola`, 'server');
-                    addLog(`[${fromClient.name}] QUIT`, 'client');
-                }, 6000);
+        if (!needsRelay) {
+            addLog(`[${firstServer.name}] 250 OK`, 'server');
+            await delay(300);
+            addLog(`[${fromClient.name}] DATA`, 'client');
+            await delay(800);
 
-                setTimeout(() => {
-                    addLog(`[${firstServer.name}] 221 ${firstServer.config.domain} Service closing transmission channel`, 'server');
-                    addLog('✅Correo enviado exitosamente.', 'success');
-                    setSimulationStatus('disconnected');
-                }, 7000);
+            addLog(`[${firstServer.name}] 354 Ingrese el correo, termine con <CRLF>.<CRLF>`, 'server');
+            await delay(300);
+            addLog(`[${fromClient.name}] Subject: ${emailData.subject}`, 'client');
+            await delay(300);
+            addLog(`[${fromClient.name}] ${emailData.message}`, 'client');
+            await delay(300);
+            addLog(`[${fromClient.name}] .`, 'client');
+            await delay(800);
 
+            addLog(`[${firstServer.name}] 250 OK: mensaje en cola`, 'server');
+            await delay(300);
+            addLog(`[${fromClient.name}] QUIT`, 'client');
+            await delay(700);
+
+            addLog(`[${firstServer.name}] 221 ${firstServer.config.domain} Service closing transmission channel`, 'server');
+            await delay(300);
+            addLog('✅Correo enviado exitosamente.', 'success');
+            setSimulationStatus('disconnected');
+
+        } else {
+            addLog(`[${firstServer.name}] 250 OK, retransmisión para <${emailData.to}>`, 'server');
+            await delay(300);
+            addLog(`[${fromClient.name}] DATA`, 'client');
+            await delay(800);
+
+            addLog(`[${firstServer.name}] 354 Ingrese el correo, termine con <CRLF>.<CRLF>`, 'server');
+            await delay(300);
+            addLog(`[${fromClient.name}] Subject: ${emailData.subject}`, 'client');
+            await delay(300);
+            addLog(`[${fromClient.name}] ${emailData.message}`, 'client');
+            await delay(300);
+            addLog(`[${fromClient.name}] .`, 'client');
+            await delay(800);
+
+            const nextServerConnection = connections.find(conn => conn.from === firstServer.id && elements.find(el => el.id === conn.to)?.type === 'server');
+            const nextServer = nextServerConnection ? elements.find(el => el.id === nextServerConnection.to) : null;
+
+            if (nextServer) {
+                addLog(`[${firstServer.name}] 250 OK: mensaje en cola para retransmisión`, 'server');
+                await delay(300);
+                addLog(`[${firstServer.name}] Retransmitiendo a [${nextServer.name}:${nextServer.config.port}]...`, 'client');
+                await delay(800);
+
+                addLog(`[${nextServer.name}] 220 ${nextServer.config.domain} ESMTP Listo`, 'server');
+                await delay(300);
+                addLog(`[${firstServer.name}] HELO ${firstServer.config.domain}`, 'client');
+                await delay(700);
+
+                addLog(`[${nextServer.name}] 250 ${nextServer.config.domain} ¡Hola!`, 'server');
+                await delay(300);
+                addLog(`[${firstServer.name}] MAIL FROM:<${emailData.from}>`, 'client');
+                await delay(700);
+
+                addLog(`[${nextServer.name}] 250 OK`, 'server');
+                await delay(300);
+                addLog(`[${firstServer.name}] RCPT TO:<${emailData.to}>`, 'client');
+                await delay(700);
+
+                addLog(`[${nextServer.name}] 250 OK`, 'server');
+                await delay(300);
+                addLog(`[${firstServer.name}] DATA`, 'client');
+                await delay(800);
+
+                addLog(`[${nextServer.name}] 354 Ingrese el correo, termine con <CRLF>.<CRLF>`, 'server');
+                await delay(300);
+                addLog(`[${firstServer.name}] Subject: ${emailData.subject}`, 'client');
+                await delay(300);
+                addLog(`[${firstServer.name}] ${emailData.message}`, 'client');
+                await delay(300);
+                addLog(`[${firstServer.name}] .`, 'client');
+                await delay(800);
+
+                addLog(`[${nextServer.name}] 250 OK: mensaje en cola`, 'server');
+                await delay(300);
+                addLog(`[${firstServer.name}] QUIT`, 'client');
+                await delay(700);
+
+                addLog(`[${nextServer.name}] 221 ${nextServer.config.domain} Service closing transmission channel`, 'server');
+                await delay(300);
+                addLog(`[${firstServer.name}] QUIT`, 'client');
+                await delay(300);
+                addLog(`[${firstServer.name}] 221 ${firstServer.config.domain} Service closing transmission channel`, 'server');
+                await delay(300);
+                addLog('Correo retransmitido exitosamente al servidor intermedio.', 'success');
+                setSimulationStatus('disconnected');
             } else {
-                addLog(`[${firstServer.name}] 250 OK, retransmisión para <${emailData.to}>`, 'server');
-                addLog(`[${fromClient.name}] DATA`, 'client');
-                setTimeout(() => {
-                    addLog(`[${firstServer.name}] 354 Ingrese el correo, termine con <CRLF>.<CRLF>`, 'server');
-                    addLog(`[${fromClient.name}] Subject: ${emailData.subject}`, 'client');
-                    addLog(`[${fromClient.name}] ${emailData.message}`, 'client');
-                    addLog(`[${fromClient.name}] .`, 'client');
-                }, 4500);
-
-                setTimeout(() => {
-                    addLog(`[${firstServer.name}] 250 OK: mensaje en cola para retransmisión`, 'server');
-                    const nextServerConnection = connections.find(conn => conn.from === firstServer.id && elements.find(el => el.id === conn.to)?.type === 'server');
-                    const nextServer = nextServerConnection ? elements.find(el => el.id === nextServerConnection.to) : null;
-
-                    if (nextServer) {
-                        addLog(`[${firstServer.name}] Retransmitiendo a [${nextServer.name}:${nextServer.config.port}]...`, 'client');
-                        setTimeout(() => {
-                             addLog(`[${nextServer.name}] 220 ${nextServer.config.domain} ESMTP Listo`, 'server');
-                             addLog(`[${firstServer.name}] HELO ${firstServer.config.domain}`, 'client');
-                        }, 7000);
-
-                        setTimeout(() => {
-                            addLog(`[${nextServer.name}] 250 ${nextServer.config.domain} ¡Hola!`, 'server');
-                            addLog(`[${firstServer.name}] MAIL FROM:<${emailData.from}>`, 'client');
-                        }, 8000);
-
-                        setTimeout(() => {
-                            addLog(`[${nextServer.name}] 250 OK`, 'server');
-                            addLog(`[${firstServer.name}] RCPT TO:<${emailData.to}>`, 'client');
-                        }, 9000);
-
-                        setTimeout(() => {
-                            addLog(`[${nextServer.name}] 250 OK`, 'server');
-                            addLog(`[${firstServer.name}] DATA`, 'client');
-                        }, 10000);
-
-                        setTimeout(() => {
-                            addLog(`[${nextServer.name}] 354 Ingrese el correo, termine con <CRLF>.<CRLF>`, 'server');
-                            addLog(`[${firstServer.name}] Subject: ${emailData.subject}`, 'client');
-                            addLog(`[${firstServer.name}] ${emailData.message}`, 'client');
-                            addLog(`[${firstServer.name}] .`, 'client');
-                        }, 11000);
-
-                        setTimeout(() => {
-                            addLog(`[${nextServer.name}] 250 OK: mensaje en cola`, 'server');
-                            addLog(`[${firstServer.name}] QUIT`, 'client');
-                        }, 12500);
-
-                        setTimeout(() => {
-                            addLog(`[${nextServer.name}] 221 ${nextServer.config.domain} Service closing transmission channel`, 'server');
-                            addLog(`[${firstServer.name}] QUIT`, 'client');
-                            addLog(`[${firstServer.name}] 221 ${firstServer.config.domain} Service closing transmission channel`, 'server');
-                            addLog('Correo retransmitido exitosamente al servidor intermedio.', 'success');
-                            setSimulationStatus('disconnected');
-                        }, 13500);
-
-                    } else {
-                        addLog('No se encontró un servidor intermedio para la retransmisión.', 'error');
-                        setSimulationStatus('disconnected');
-                    }
-                }, 5000);
+                addLog('No se encontró un servidor intermedio para la retransmisión.', 'error');
+                setSimulationStatus('disconnected');
             }
-        }, 4000);
+        }
+        } catch (e) {
+            if (e.message !== 'aborted') {
+                addLog('Error inesperado en la simulación.', 'error');
+            }
+        }
     };
 
     const generateId = () => Math.random().toString(36).substr(2, 9);
 
     const addLog = (message, type = 'info') => {
         setLogs(prevLogs => [...prevLogs, { timestamp: new Date().toLocaleTimeString(), message, type }]);
+    };
+
+    const showNotification = (message, type = 'error') => {
+        setNotification({ message, type });
     };
 
     const handleToolDragStart = (e, tool) => {
@@ -640,7 +724,7 @@ const DynamicSimulator = () => {
                 setConnectionStart(element);
             } else if (connectionStart.id !== element.id) {
                 if (connectionStart.type === 'client' && element.type === 'client') {
-                    alert('No se puede conectar un cliente a otro cliente.');
+                    showNotification('No se puede conectar un cliente a otro cliente.');
                     setConnectionStart(null);
                     setIsConnecting(false);
                     return;
@@ -669,12 +753,12 @@ const DynamicSimulator = () => {
         for (const element of elements) {
             if (element.type === 'client') {
                 if (!element.name.trim() || !element.config.nickname?.trim()) {
-                    alert(`El cliente "${element.name}" debe tener nombre y nickname completos.`);
+                    showNotification(`El cliente "${element.name}" debe tener nombre y nickname completos.`);
                     return false;
                 }
             } else if (element.type === 'server') {
                 if (!element.name.trim() || !element.config.domain?.trim() || !element.config.port || !element.config.maxConnections) {
-                    alert(`El servidor "${element.name}" debe tener nombre, dominio, puerto y máximo de conexiones completos.`);
+                    showNotification(`El servidor "${element.name}" debe tener nombre, dominio, puerto y máximo de conexiones completos.`);
                     return false;
                 }
             }
@@ -866,12 +950,30 @@ const DynamicSimulator = () => {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {!showEmailConfig && (
-                <>
-            <div className="w-64 bg-white shadow-lg p-4">
-                <h3 className="text-lg font-bold mb-4">Herramientas</h3>
+            {notification && (
+                <AlertNotification
+                    message={notification.message}
+                    type={notification.type}
+                    onClose={() => setNotification(null)}
+                />
+            )}
+            <div className="w-64 bg-gray-800 shadow-lg p-4 flex flex-col">
+                <h3 className="text-lg font-bold mb-2 text-white flex items-center gap-2">
+                    <Wrench size={20} />
+                    Herramientas
+                </h3>
 
-                <div className="space-y-2 mb-6">
+                <div className="bg-gray-700 border border-gray-600 rounded-lg p-3 mb-4">
+                    <div className="flex items-center gap-2 text-blue-300 mb-1">
+                        <MousePointer size={14} />
+                        <span className="text-xs font-semibold">Arrastrar y soltar</span>
+                    </div>
+                    <p className="text-[11px] text-gray-300 leading-relaxed">
+                        Arrastra los componentes desde aquí hasta el lienzo para construir tu topología de red.
+                    </p>
+                </div>
+
+                <div className="space-y-2 mb-4">
                     {tools.map(tool => {
                         const Icon = tool.icon;
                         return (
@@ -879,19 +981,20 @@ const DynamicSimulator = () => {
                                 key={tool.id}
                                 draggable
                                 onDragStart={(e) => handleToolDragStart(e, tool)}
-                                className={`${tool.color} text-white p-3 rounded-lg cursor-grab hover:opacity-80 flex items-center space-x-2`}
+                                className={`${tool.color} text-white p-3 rounded-lg cursor-grab hover:opacity-80 flex items-center space-x-2 active:cursor-grabbing`}
                             >
-                                <Icon size={20} />
+                                <GripVertical size={14} className="opacity-60" />
+                                <Icon size={18} />
                                 <span className="text-sm">{tool.name}</span>
                             </div>
                         );
                     })}
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 mb-4">
                     <button
                         onClick={() => setIsConnecting(!isConnecting)}
-                        className={`w-full p-2 rounded flex items-center justify-center space-x-2 ${isConnecting ? 'bg-orange-500 text-white' : 'bg-gray-200 hover:bg-gray-300'
+                        className={`w-full p-2 rounded flex items-center justify-center space-x-2 ${isConnecting ? 'bg-orange-500 text-white' : 'bg-gray-600 hover:bg-gray-500 text-white'
                             }`}
                     >
                         <Cable size={16} />
@@ -901,58 +1004,68 @@ const DynamicSimulator = () => {
                     </button>
 
                     {isConnecting && connectionStart && (
-                        <div className="text-xs text-gray-600 p-2 bg-yellow-100 rounded">
+                        <div className="text-xs text-yellow-200 p-2 bg-yellow-900/40 rounded">
                             Selecciona el elemento destino para crear la conexión
                         </div>
                     )}
+                </div>
+
+                <div className="mt-auto pt-4 border-t">
+                    <button
+                        onClick={loadExample}
+                        className="w-full p-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center justify-center space-x-2 text-sm font-medium"
+                    >
+                        <Zap size={16} />
+                        <span>Ejemplo de simulación</span>
+                    </button>
                 </div>
             </div>
 
             <div className="flex-1 relative">
 
-            <div className="absolute top-4 right-4 bg-white p-4 rounded-lg shadow-md flex items-center space-x-4 z-10">
-                <div className="flex items-center space-x-2">
-                    <div className={`w-3 h-3 rounded-full 
+            <div className="absolute top-4 right-4 bg-white p-2 px-3 rounded-lg shadow-md flex items-center gap-2 flex-wrap z-10">
+                <div className="flex items-center space-x-1.5">
+                    <div className={`w-2.5 h-2.5 rounded-full 
                         ${simulationStatus === 'running' ? 'bg-green-500' :
                         simulationStatus === 'paused' ? 'bg-yellow-500' :
                         'bg-red-500'}`}></div>
-                    <span className="text-gray-700 text-sm font-semibold">
-                        Estado de Conexión:
+                    <span className="text-gray-700 text-xs font-semibold">
+                        Estado:
                     </span>
-                    <span className={`font-bold 
+                    <span className={`font-bold text-xs
                         ${simulationStatus === 'running' ? 'text-green-600' :
                         simulationStatus === 'paused' ? 'text-yellow-600' :
                         'text-red-600'}`}>
                         {simulationStatus === 'disconnected' ? 'Desconectado' :
                         simulationStatus === 'paused' ? 'Pausado' :
-                        'Conectado'} {/* 'Conectado' for 'running' status */}
+                        'Conectado'}
                     </span>
                 </div>
 
                     <button
                         onClick={startSimulation}
-                        className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+                        className="flex items-center px-3 py-1.5 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition duration-200 shrink-0"
                     >
                         {simulationStatus === 'running' ? (
-                            <Pause size={18} className="mr-2" /> 
+                            <Pause size={14} className="mr-1" /> 
                         ) : (
-                            <Play size={18} className="mr-2" /> 
+                            <Play size={14} className="mr-1" /> 
                         )}
-                        {simulationStatus === 'running' ? 'Pausar Simulación' : 'Iniciar Simulación'}
+                        {simulationStatus === 'running' ? 'Pausar' : 'Iniciar'}
                     </button>
                     <button
                         onClick={stopSimulation} 
-                        className="p-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-200"
+                        className="p-1.5 bg-red-600 text-white rounded-md hover:bg-red-700 transition duration-200 shrink-0"
                         title="Detener Simulación"
                     >
-                        <Square size={18} />
+                        <Square size={14} />
                     </button>
                     <button
                         onClick={resetSimulation}
-                        className="p-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-200"
+                        className="p-1.5 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-200 shrink-0"
                         title="Resetear Simulación"
                     >
-                        <RefreshCcw size={18} />
+                        <RefreshCcw size={14} />
                     </button>
                 </div>
                 <div
@@ -1067,16 +1180,20 @@ const DynamicSimulator = () => {
                 </div>
             </div>
 
-            <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-md z-10 w-1/3 max-h-[28rem] overflow-y-auto">
-                <CommunicationLog logs={logs} />
-            </div>
-            <div className="absolute bottom-4 left-4">
+            <div className="absolute bottom-4 right-4 bg-gray-800 border border-gray-700 rounded-lg shadow-md z-10 w-[30rem] max-h-[26rem] flex flex-col overflow-hidden">
+                <div className="flex items-center justify-between px-4 pt-3 pb-2 shrink-0">
+                    <h2 className="text-sm font-semibold text-gray-100 flex items-center">
+                        <Terminal className="mr-2 text-blue-400" size={16} />
+                        Log de Comunicación
+                    </h2>
                     <button
-                        className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+                        className="px-3 py-1 text-xs bg-gray-600 text-white rounded hover:bg-gray-500 transition"
                         onClick={() => window.location.href = '/'}
                     >
                         Volver al Menú
                     </button>
+                </div>
+                <CommunicationLog logs={logs} hideHeader />
             </div>
 
             {configModal && (
@@ -1093,8 +1210,6 @@ const DynamicSimulator = () => {
                         />
                     </div>
                 </div>
-            )}
-                </>
             )}
             
             {showEmailConfig && (
