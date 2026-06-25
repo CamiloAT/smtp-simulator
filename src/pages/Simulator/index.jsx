@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Server, Monitor, Cable, Settings, Plus, X, Play, RefreshCcw, Pause, Square, MousePointer, AlertTriangle, GripVertical, Zap, Wrench, Terminal, User, AtSign, FileText, MessageSquare } from 'lucide-react';
+import { Server, Monitor, Cable, Settings, Plus, X, Play, RefreshCcw, Pause, Square, MousePointer, AlertTriangle, GripVertical, Zap, Wrench, Terminal, User, AtSign, FileText, MessageSquare, HelpCircle } from 'lucide-react';
 import { CommunicationLog } from '../../components';
 import LoadingScreen from '../../components/LoadingScreen';
 
@@ -30,6 +30,55 @@ const AlertNotification = ({ message, type, onClose }) => {
             <button onClick={onClose} className="ml-2 opacity-60 hover:opacity-100">
                 <X size={16} />
             </button>
+        </div>
+    );
+};
+
+const RulesModal = ({ onClose }) => {
+    const rules = [
+        { title: 'Estructura mínima', desc: 'Debe haber al menos un cliente, un servidor y una conexión.' },
+        { title: 'Servidor principal único', desc: 'Debe existir exactamente un servidor principal (Server A) que reciba solo de clientes y envíe solo a otros servidores.' },
+        { title: 'Un solo emisor', desc: 'Solo puede haber UN cliente conectado al servidor principal. Este es el cliente que envía el correo.' },
+        { title: 'Cliente emisor', desc: 'El cliente emisor no debe tener conexiones entrantes. Debe tener exactamente una conexión saliente al servidor principal.' },
+        { title: 'Servidores intermedios', desc: 'Debe haber al menos un servidor intermedio conectado al servidor principal.' },
+        { title: 'Conexión de intermedios', desc: 'Cada servidor intermedio debe recibir exactamente una conexión del servidor principal.' },
+        { title: 'Clientes finales', desc: 'Cada servidor intermedio envía solo a clientes finales (al menos uno). Los clientes finales no deben tener conexiones salientes.' },
+        { title: 'Topología válida', desc: 'Todos los elementos deben encajar en la estructura: emisor → servidor principal → servidores intermedios → receptores.' },
+    ];
+
+    return (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-center justify-center animate-fade-in">
+            <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-lg mx-4 max-h-[80vh] overflow-y-auto">
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                        <HelpCircle className="text-indigo-600" size={22} />
+                        <h2 className="text-lg font-bold text-gray-800">Reglas de Validación</h2>
+                    </div>
+                    <button onClick={onClose} className="p-1 rounded-full hover:bg-gray-100 transition-colors">
+                        <X size={20} className="text-gray-500" />
+                    </button>
+                </div>
+                <div className="space-y-3">
+                    {rules.map((rule, i) => (
+                        <div key={i} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+                            <div className="flex items-start gap-2">
+                                <span className="flex-shrink-0 w-5 h-5 bg-indigo-600 text-white text-xs font-bold rounded-full flex items-center justify-center mt-0.5">
+                                    {i + 1}
+                                </span>
+                                <div>
+                                    <h3 className="text-sm font-bold text-gray-800">{rule.title}</h3>
+                                    <p className="text-xs text-gray-600 mt-0.5">{rule.desc}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="mt-4 p-3 bg-indigo-50 border border-indigo-200 rounded-lg">
+                    <p className="text-xs text-indigo-700 font-medium">
+                        <strong>Ejemplo válido:</strong> Cliente 1 → Servidor A → Servidores B y C → Clientes 2 y 3
+                    </p>
+                </div>
+            </div>
         </div>
     );
 };
@@ -146,6 +195,7 @@ const DynamicSimulator = () => {
     const [logs, setLogs] = useState([]);
     const [notification, setNotification] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [showRules, setShowRules] = useState(false);
     const handleNavigateHome = useCallback(() => setLoading(true), []);
     const handleLoadComplete = useCallback(() => { window.location.href = '/'; }, []);
 
@@ -198,7 +248,11 @@ const DynamicSimulator = () => {
             addLog('Debe haber al menos un cliente inicial conectado al servidor principal.', 'error');
             return { isValid: false, message: 'Debe haber al menos un cliente inicial conectado al servidor principal.' };
         }
-        addLog(`Clientes iniciales identificados: ${initialClients.map(c => c.name).join(', ')}`, 'success');
+        if (initialClients.length > 1) {
+            addLog('Solo puede haber un cliente conectado al servidor principal (el que envía el correo).', 'error');
+            return { isValid: false, message: 'Solo puede haber un cliente conectado al servidor principal (el que envía el correo).' };
+        }
+        addLog(`Cliente inicial identificado: ${initialClients[0].name}`, 'success');
 
         for (const client of initialClients) {
             const clientOutgoing = getConnectionsFrom(client.id);
@@ -485,25 +539,23 @@ const DynamicSimulator = () => {
     const loadExample = () => {
         resetSimulation();
         const exampleElements = [
-            { id: 'c1', type: 'client', name: 'Cliente 1', x: 80, y: 150, config: { nickname: 'juan', domain: '@correo.com', port: 587 } },
-            { id: 'c2', type: 'client', name: 'Cliente 2', x: 80, y: 300, config: { nickname: 'maria', domain: '@correo.com', port: 587 } },
-            { id: 's1', type: 'server', name: 'Servidor A', x: 350, y: 220, config: { domain: 'correo.com', port: 25, maxConnections: 100 } },
-            { id: 's2', type: 'server', name: 'Servidor B', x: 620, y: 120, config: { domain: 'destino.com', port: 25, maxConnections: 100 } },
-            { id: 's3', type: 'server', name: 'Servidor C', x: 620, y: 330, config: { domain: 'empresa.com', port: 25, maxConnections: 100 } },
-            { id: 'c3', type: 'client', name: 'Cliente 3', x: 880, y: 100, config: { nickname: 'pedro', domain: '@destino.com', port: 587 } },
-            { id: 'c4', type: 'client', name: 'Cliente 4', x: 880, y: 350, config: { nickname: 'laura', domain: '@empresa.com', port: 587 } },
+            { id: 'c1', type: 'client', name: 'Cliente 1', x: 80, y: 220, config: { nickname: 'juan', domain: '@correo.com', port: 587 } },
+            { id: 's1', type: 'server', name: 'Servidor A', x: 320, y: 220, config: { domain: 'correo.com', port: 25, maxConnections: 100 } },
+            { id: 's2', type: 'server', name: 'Servidor B', x: 580, y: 120, config: { domain: 'destino.com', port: 25, maxConnections: 100 } },
+            { id: 's3', type: 'server', name: 'Servidor C', x: 580, y: 330, config: { domain: 'empresa.com', port: 25, maxConnections: 100 } },
+            { id: 'c2', type: 'client', name: 'Cliente 2', x: 840, y: 120, config: { nickname: 'pedro', domain: '@destino.com', port: 587 } },
+            { id: 'c3', type: 'client', name: 'Cliente 3', x: 840, y: 330, config: { nickname: 'laura', domain: '@empresa.com', port: 587 } },
         ];
         const exampleConnections = [
-            { id: 'conn1', from: 'c1', to: 's1', fromPos: { x: 180, y: 175 }, toPos: { x: 350, y: 245 } },
-            { id: 'conn2', from: 'c2', to: 's1', fromPos: { x: 180, y: 325 }, toPos: { x: 350, y: 245 } },
-            { id: 'conn3', from: 's1', to: 's2', fromPos: { x: 450, y: 245 }, toPos: { x: 620, y: 145 } },
-            { id: 'conn4', from: 's1', to: 's3', fromPos: { x: 450, y: 245 }, toPos: { x: 620, y: 355 } },
-            { id: 'conn5', from: 's2', to: 'c3', fromPos: { x: 720, y: 145 }, toPos: { x: 880, y: 125 } },
-            { id: 'conn6', from: 's3', to: 'c4', fromPos: { x: 720, y: 355 }, toPos: { x: 880, y: 375 } },
+            { id: 'conn1', from: 'c1', to: 's1', fromPos: { x: 180, y: 245 }, toPos: { x: 320, y: 245 } },
+            { id: 'conn2', from: 's1', to: 's2', fromPos: { x: 420, y: 245 }, toPos: { x: 580, y: 145 } },
+            { id: 'conn3', from: 's1', to: 's3', fromPos: { x: 420, y: 245 }, toPos: { x: 580, y: 355 } },
+            { id: 'conn4', from: 's2', to: 'c2', fromPos: { x: 680, y: 145 }, toPos: { x: 840, y: 145 } },
+            { id: 'conn5', from: 's3', to: 'c3', fromPos: { x: 680, y: 355 }, toPos: { x: 840, y: 355 } },
         ];
         setElements(exampleElements);
         setConnections(exampleConnections);
-        addLog('Ejemplo de topología SMTP cargado: 2 clientes → Servidor A → Servidores B y C → clientes finales.', 'success');
+        addLog('Ejemplo cargado: Cliente 1 envía → Servidor A → Servidores B y C → Clientes 2 y 3 reciben.', 'success');
     };
 
     const delay = (ms) => new Promise((resolve, reject) => {
@@ -973,10 +1025,18 @@ const DynamicSimulator = () => {
                     onClose={() => setNotification(null)}
                 />
             )}
+            {showRules && <RulesModal onClose={() => setShowRules(false)} />}
             <div className="w-64 bg-gray-800 shadow-lg p-4 flex flex-col">
                 <h3 className="text-lg font-bold mb-2 text-white flex items-center gap-2">
                     <Wrench size={20} />
                     Herramientas
+                    <button
+                        onClick={() => setShowRules(true)}
+                        className="ml-auto p-1 rounded-full bg-gray-600 hover:bg-gray-500 transition-colors"
+                        title="Ver reglas de validación"
+                    >
+                        <HelpCircle size={16} />
+                    </button>
                 </h3>
 
                 <div className="bg-gray-700 border border-gray-600 rounded-lg p-3 mb-4">
