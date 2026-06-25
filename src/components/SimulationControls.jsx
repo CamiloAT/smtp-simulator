@@ -21,33 +21,33 @@ const SimulationControls = ({ isRunning, onStart, onReset, connectionStatus }) =
     };
 
     return (
-        <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-            <div className="mb-4 p-4 bg-gray-50 rounded-lg">
-                <div className="flex items-center justify-center space-x-4">
-                    <Server className={`${getStatusColor(connectionStatus)}`} size={24} />
-                    <span className="text-sm font-medium">
-                        Estado de Conexión: <span className={`${getStatusColor(connectionStatus)} font-semibold`}>
+        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+            <div className="mb-3 p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-center space-x-3">
+                    <Server className={`${getStatusColor(connectionStatus)}`} size={18} />
+                    <span className="text-xs font-medium">
+                        Estado: <span className={`${getStatusColor(connectionStatus)} font-semibold`}>
                             {getStatusText(connectionStatus)}
                         </span>
                     </span>
                 </div>
             </div>
 
-            <div className="flex space-x-3">
+            <div className="flex space-x-2">
                 <button
                     onClick={onStart}
                     disabled={isRunning}
-                    className="flex-1 flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all transform hover:scale-105 disabled:hover:scale-100"
+                    className="flex-1 flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all text-sm font-medium"
                 >
-                    <Play className="mr-2" size={20} />
-                    {isRunning ? 'Simulando...' : 'Iniciar Simulación'}
+                    <Play className="mr-2" size={16} />
+                    {isRunning ? 'Simulando...' : 'Iniciar'}
                 </button>
                 <button
                     onClick={onReset}
-                    className="px-4 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all transform hover:scale-105"
-                    title="Resetear simulación"
+                    className="px-3 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all"
+                    title="Resetear"
                 >
-                    <RotateCcw size={20} />
+                    <RotateCcw size={16} />
                 </button>
             </div>
         </div>
