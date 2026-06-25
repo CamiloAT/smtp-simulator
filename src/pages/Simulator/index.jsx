@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Server, Monitor, Cable, Settings, Plus, X, Play, RefreshCcw, Pause, Square, MousePointer, AlertTriangle, GripVertical, Zap, Wrench, Terminal } from 'lucide-react';
+import { Server, Monitor, Cable, Settings, Plus, X, Play, RefreshCcw, Pause, Square, MousePointer, AlertTriangle, GripVertical, Zap, Wrench, Terminal, User, AtSign, FileText, MessageSquare } from 'lucide-react';
 import { CommunicationLog } from '../../components';
 import LoadingScreen from '../../components/LoadingScreen';
 
@@ -39,17 +39,20 @@ const EmailConfigScreen = ({ emailData, setEmailData, onSend, onCancel, initialC
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center animate-fade-in">
             <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md mx-4">
                 <div className="flex items-center mb-4">
-                    <Settings className="mr-2 text-blue-600" size={20} />
+                    <Settings className="mr-2 text-indigo-600" size={20} />
                     <h2 className="text-lg font-bold text-gray-800">Configuración del Email</h2>
                 </div>
                 
                 <div className="space-y-3">
                     <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">De:</label>
+                        <label className="block text-xs font-bold text-indigo-700 mb-1 flex items-center gap-1.5">
+                            <User size={12} />
+                            De:
+                        </label>
                         <select
                             value={emailData.from}
                             onChange={(e) => setEmailData(prev => ({...prev, from: e.target.value}))}
-                            className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-semibold italic text-gray-700 bg-white shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition-all"
                         >
                             {initialClients.map(client => (
                                 <option key={client} value={client}>{client}</option>
@@ -58,11 +61,14 @@ const EmailConfigScreen = ({ emailData, setEmailData, onSend, onCancel, initialC
                     </div>
                     
                     <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">Para:</label>
+                        <label className="block text-xs font-bold text-indigo-700 mb-1 flex items-center gap-1.5">
+                            <AtSign size={12} />
+                            Para:
+                        </label>
                         <select
                             value={emailData.to}
                             onChange={(e) => setEmailData(prev => ({...prev, to: e.target.value}))}
-                            className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-semibold italic text-gray-700 bg-white shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition-all"
                         >
                             {finalClients.map(client => (
                                 <option key={client} value={client}>{client}</option>
@@ -71,22 +77,30 @@ const EmailConfigScreen = ({ emailData, setEmailData, onSend, onCancel, initialC
                     </div>
                     
                     <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">Asunto:</label>
+                        <label className="block text-xs font-bold text-indigo-700 mb-1 flex items-center gap-1.5">
+                            <FileText size={12} />
+                            Asunto:
+                        </label>
                         <input
                             type="text"
                             value={emailData.subject}
                             onChange={(e) => setEmailData(prev => ({...prev, subject: e.target.value}))}
-                            className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-bold text-gray-800 bg-white shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition-all placeholder:text-gray-400 placeholder:font-normal"
+                            placeholder="Asunto del mensaje"
                         />
                     </div>
                     
                     <div>
-                        <label className="block text-xs font-medium text-gray-700 mb-1">Mensaje:</label>
+                        <label className="block text-xs font-bold text-indigo-700 mb-1 flex items-center gap-1.5">
+                            <MessageSquare size={12} />
+                            Mensaje:
+                        </label>
                         <textarea
                             value={emailData.message}
                             onChange={(e) => setEmailData(prev => ({...prev, message: e.target.value}))}
                             rows="3"
-                            className="w-full p-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-700 bg-white shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 resize-none transition-all placeholder:text-gray-400 placeholder:font-normal"
+                            placeholder="Contenido del mensaje..."
                         />
                     </div>
                     
