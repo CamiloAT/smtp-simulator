@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+import LoadingScreen from './components/LoadingScreen';
 import {
     EmailConfiguration,
     SimulationControls,
@@ -8,6 +9,9 @@ import {
 } from './components';
 
 const SMTPSimulator = () => {
+  const [loading, setLoading] = useState(false);
+  const handleNavigate = useCallback(() => setLoading(true), []);
+  const handleLoadComplete = useCallback(() => { window.location.href = '/simulator'; }, []);
   const [isRunning, setIsRunning] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [logs, setLogs] = useState([]);
@@ -139,7 +143,7 @@ const SMTPSimulator = () => {
         </div>
         <button
           className="px-4 py-2 bg-white text-indigo-600 rounded-lg hover:bg-indigo-50 transition text-sm font-medium"
-          onClick={() => window.location.href = '/simulator'}
+          onClick={handleNavigate}
         >
           Ir al Simulador
         </button>
@@ -173,6 +177,7 @@ const SMTPSimulator = () => {
           <ProtocolInfo />
         </div>
       </main>
+      {loading && <LoadingScreen text="Cargando Simulador Dinámico..." onComplete={handleLoadComplete} />}
     </div>
   );
 };

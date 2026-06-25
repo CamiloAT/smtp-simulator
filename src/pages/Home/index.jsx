@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { MonitorSmartphone } from 'lucide-react';
+import LoadingScreen from '../../components/LoadingScreen';
 import {
     EmailConfiguration,
     SimulationControls,
@@ -10,6 +11,13 @@ import {
 import { useSmtpSimulation } from '../../hooks/useSmtpSimulation';
 
 const Home = () => {
+    const [loading, setLoading] = useState(false);
+    const handleNavigate = useCallback(() => {
+        setLoading(true);
+    }, []);
+    const handleLoadComplete = useCallback(() => {
+        window.location.href = '/simulator';
+    }, []);
     const {
         isRunning,
         currentStep,
@@ -33,13 +41,13 @@ const Home = () => {
                         <p className="text-xs text-indigo-200">Simple Mail Transfer Protocol</p>
                     </div>
                 </div>
-                <a
-                    href="/simulator"
+                <button
+                    onClick={handleNavigate}
                     className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm font-medium"
                 >
                     <MonitorSmartphone size={16} />
                     <span>Simulador Dinámico</span>
-                </a>
+                </button>
             </header>
 
             {/* Main content */}
@@ -74,6 +82,7 @@ const Home = () => {
                     <ProtocolInfo />
                 </div>
             </main>
+            {loading && <LoadingScreen text="Abriendo Simulador..." onComplete={handleLoadComplete} />}
         </div>
     );
 };

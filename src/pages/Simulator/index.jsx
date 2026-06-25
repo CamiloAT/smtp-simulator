@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Server, Monitor, Cable, Settings, Plus, X, Play, RefreshCcw, Pause, Square, MousePointer, AlertTriangle, GripVertical, Zap, Wrench, Terminal } from 'lucide-react';
 import { CommunicationLog } from '../../components';
+import LoadingScreen from '../../components/LoadingScreen';
 
 const AlertNotification = ({ message, type, onClose }) => {
     useEffect(() => {
@@ -130,6 +131,9 @@ const DynamicSimulator = () => {
     });
     const [logs, setLogs] = useState([]);
     const [notification, setNotification] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const handleNavigateHome = useCallback(() => setLoading(true), []);
+    const handleLoadComplete = useCallback(() => { window.location.href = '/'; }, []);
 
     const tools = [
         { id: 'client', name: 'Cliente SMTP', icon: Monitor, color: 'bg-blue-500' },
@@ -1188,7 +1192,7 @@ const DynamicSimulator = () => {
                     </h2>
                     <button
                         className="px-3 py-1 text-xs bg-gray-600 text-white rounded hover:bg-gray-500 transition"
-                        onClick={() => window.location.href = '/'}
+                        onClick={handleNavigateHome}
                     >
                         Volver al Menú
                     </button>
@@ -1222,6 +1226,7 @@ const DynamicSimulator = () => {
                     finalClients={getFinalClients()}
                 />
             )}
+            {loading && <LoadingScreen text="Volviendo al Menú..." onComplete={handleLoadComplete} />}
         </div>
     );
 };
