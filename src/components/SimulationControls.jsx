@@ -37,7 +37,7 @@ const SimulationControls = ({ isRunning, onStart, onReset, connectionStatus }) =
                 <button
                     onClick={onStart}
                     disabled={isRunning}
-                    className="flex-1 flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all text-sm font-medium"
+                    className="flex-1 flex items-center justify-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all text-sm font-medium"
                 >
                     <Play className="mr-2" size={16} />
                     {isRunning ? 'Simulando...' : 'Iniciar'}

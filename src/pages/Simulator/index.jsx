@@ -98,7 +98,7 @@ const EmailConfigScreen = ({ emailData, setEmailData, onSend, onCancel, initialC
                         </button>
                         <button
                             onClick={onSend}
-                            className="px-4 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition duration-200"
+                            className="px-4 py-1.5 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition duration-200"
                             disabled={!emailData.from || !emailData.to || isRunning}
                         >
                             Enviar
@@ -1044,7 +1044,7 @@ const DynamicSimulator = () => {
 
                     <button
                         onClick={startSimulation}
-                        className="flex items-center px-3 py-1.5 bg-blue-600 text-white text-xs rounded-md hover:bg-blue-700 transition duration-200 shrink-0"
+                        className="flex items-center px-3 py-1.5 bg-indigo-600 text-white text-xs rounded-md hover:bg-indigo-700 transition duration-200 shrink-0"
                     >
                         {simulationStatus === 'running' ? (
                             <Pause size={14} className="mr-1" /> 
@@ -1156,7 +1156,7 @@ const DynamicSimulator = () => {
                                 <div className="absolute -top-8 left-0 opacity-0 group-hover:opacity-100 transition-opacity flex space-x-1">
                                     <button
                                         onClick={(e) => openConfigModal(element, e)}
-                                        className="bg-blue-600 text-white p-1 rounded text-xs hover:bg-blue-700"
+                                        className="bg-indigo-600 text-white p-1 rounded text-xs hover:bg-indigo-700"
                                     >
                                         <Settings size={12} />
                                     </button>
@@ -1347,7 +1347,7 @@ const ConfigForm = ({ element, onSave, onCancel }) => {
             <div className="flex space-x-3 pt-4">
                 <button
                     onClick={handleSubmit}
-                    className="flex-1 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+                    className="flex-1 bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700"
                 >
                     Guardar
                 </button>

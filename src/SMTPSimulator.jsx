@@ -130,16 +130,16 @@ const SMTPSimulator = () => {
 
   return (
     <div className="h-screen flex flex-col bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-hidden">
-      <header className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200 shrink-0">
+      <header className="flex items-center justify-between px-6 py-3 bg-indigo-600 shrink-0">
         <div className="flex items-center space-x-3">
-          <Mail className="text-blue-600" size={28} />
+          <Mail className="text-white" size={28} />
           <div>
-            <h1 className="text-xl font-bold text-gray-800 leading-tight">Simulador SMTP</h1>
-            <p className="text-xs text-gray-500">Simple Mail Transfer Protocol</p>
+            <h1 className="text-xl font-bold text-white leading-tight">Simulador SMTP</h1>
+            <p className="text-xs text-indigo-200">Simple Mail Transfer Protocol</p>
           </div>
         </div>
         <button
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm font-medium"
+          className="px-4 py-2 bg-white text-indigo-600 rounded-lg hover:bg-indigo-50 transition text-sm font-medium"
           onClick={() => window.location.href = '/simulator'}
         >
           Ir al Simulador
