@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Mail } from 'lucide-react';
 import {
     EmailConfiguration,
     SimulationControls,
@@ -132,7 +131,7 @@ const SMTPSimulator = () => {
     <div className="h-screen flex flex-col bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-hidden">
       <header className="flex items-center justify-between px-6 py-3 bg-indigo-600 shrink-0">
         <div className="flex items-center space-x-3">
-          <Mail className="text-white" size={28} />
+          <img src="/logo.png" alt="SMTP Simulator" className="w-12 h-12" />
           <div>
             <h1 className="text-xl font-bold text-white leading-tight">Simulador SMTP</h1>
             <p className="text-xs text-indigo-200">Simple Mail Transfer Protocol</p>

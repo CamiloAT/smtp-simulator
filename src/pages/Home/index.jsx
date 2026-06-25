@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, MonitorSmartphone } from 'lucide-react';
+import { MonitorSmartphone } from 'lucide-react';
 import {
     EmailConfiguration,
     SimulationControls,
@@ -25,12 +25,12 @@ const Home = () => {
     return (
         <div className="h-screen flex flex-col bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 overflow-hidden">
             {/* Header */}
-            <header className="flex items-center justify-between px-6 py-3 bg-white border-b border-gray-200 shrink-0">
+            <header className="flex items-center justify-between px-6 py-3 bg-indigo-600 shrink-0">
                 <div className="flex items-center space-x-3">
-                    <Mail className="text-blue-600" size={28} />
+                    <img src="/logo.png" alt="SMTP Simulator" className="w-12 h-12" />
                     <div>
-                        <h1 className="text-xl font-bold text-gray-800 leading-tight">Simulador SMTP</h1>
-                        <p className="text-xs text-gray-500">Simple Mail Transfer Protocol</p>
+                        <h1 className="text-xl font-bold text-white leading-tight">Simulador SMTP</h1>
+                        <p className="text-xs text-indigo-200">Simple Mail Transfer Protocol</p>
                     </div>
                 </div>
                 <a
