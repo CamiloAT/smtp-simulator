@@ -368,6 +368,11 @@ const DynamicSimulator = () => {
     
 
     const startSimulation = () => {
+        const { isValid, message } = validateSimulationStructure();
+        if (!isValid) {
+            showNotification(message);
+            return;
+        }
         prepareEmailOptions();
         setShowEmailConfig(true);
     };
@@ -426,19 +431,12 @@ const DynamicSimulator = () => {
 
     const handleSendEmail = () => {
         setLogs([]);
-        addLog('Iniciando validación de la simulación...', 'info');
+        addLog('Iniciando simulación...', 'info');
+
         if (!validateAllFieldsComplete()) {
             addLog('Validación de campos incompleta. Simulación abortada.', 'error');
             return;
         }
-
-        const { isValid, message } = validateSimulationStructure();
-        if (!isValid) {
-            showNotification(`Error de estructura de red: ${message}`);
-            addLog(`Error de estructura de red: ${message}`, 'error');
-            return;
-        }
-        addLog('Validación de estructura de red completada con éxito.', 'success');
 
         assignDomainsToClients();
 
